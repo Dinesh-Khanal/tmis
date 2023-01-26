@@ -36,3 +36,21 @@
 .imgPreview img {
   width: 100%;
 }
+table {
+  width: 100%;
+  border: 1px solid gray;
+  border-collapse: collapse;
+  text-align: left;
+}
+td,
+th {
+  border: 1px solid gray;
+  padding-left: 3px;
+}
+thead tr {
+  color: white;
+  background-color: gray;
+}
+tbody tr:nth-child(even) {
+  background-color: lightgray;
+}

@@ -1,7 +1,9 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import "./App.css";
 import profilePic from "./assets/Profile.png";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { ITeacher } from "./types/teacherType";
+import { fetchTeachers, addTeacher } from "./redux/teacherSlice";
 
 const initTeacher: ITeacher = {
   name: "",
@@ -15,7 +17,14 @@ const initTeacher: ITeacher = {
 function App() {
   const [teacher, setTeacher] = useState(initTeacher);
   const [imagePreview, setImagePreview] = useState<string>(profilePic);
+  const { teacherList, isLoading, errMessage } = useAppSelector(
+    (state) => state.teacher
+  );
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(fetchTeachers());
+  }, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "photo") {
       if (!e.target.files) return;
@@ -27,9 +36,20 @@ function App() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const myForm = new FormData();
+    myForm.set("name", teacher.name);
+    myForm.set("address", teacher.address as string);
+    myForm.set("email", teacher.email);
+    myForm.set("fatherName", teacher.fatherName as string);
+    myForm.set("subject", teacher.subject as string);
+    myForm.set("dob", teacher.dob as string);
+    myForm.set("photo", teacher.photo as File);
+    dispatch(addTeacher(myForm));
   };
+  if (isLoading) return <div>Loading...</div>;
   return (
     <div className="App">
+      {errMessage && <div>Error: {errMessage}</div>}
       <h1>Teacher Record Keeping System</h1>
       <div className="frmUpper">
         <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -101,6 +121,35 @@ function App() {
           <img src={imagePreview} alt="profile picture" />
         </div>
       </div>
+      <h2>Teacher List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Father's Name</th>
+            <th>Date of birth</th>
+            <th>Photo</th>
+          </tr>
+        </thead>
+        {teacherList && (
+          <tbody>
+            {teacherList.map((t) => (
+              <tr>
+                <td>{t.name}</td>
+                <td>{t.address}</td>
+                <td>{t.email}</td>
+                <td>{t.fatherName}</td>
+                <td>{t.dob}</td>
+                <td>
+                  <img src={t.photo as string} alt={t.photo as string} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        )}
+      </table>
     </div>
   );
 }

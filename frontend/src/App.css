@@ -1,0 +1,38 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.frmUpper {
+  display: flex;
+}
+.frmUpper form {
+  width: 70%;
+  text-align: left;
+}
+.control {
+  margin-bottom: 1rem;
+}
+.control input {
+  padding: 3px;
+  width: 60%;
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  margin-left: 5px;
+}
+.control input[type="file"] {
+  display: none;
+}
+.btnPhoto {
+  cursor: pointer;
+  color: blue;
+}
+.imgPreview {
+  width: 200px;
+  border-left: 1px solid black;
+}
+.imgPreview img {
+  width: 100%;
+}

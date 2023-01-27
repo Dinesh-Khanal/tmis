@@ -48,7 +48,6 @@ function App() {
     myForm.set("photo", teacher.photo as File);
     dispatch(addTeacher(myForm));
   };
-  console.log(teacherList);
   if (isLoading) return <div>Loading...</div>;
   return (
     <div className="App">
@@ -107,6 +106,16 @@ function App() {
             />
           </div>
           <div className="control">
+            <label htmlFor="dob">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              value={teacher.subject}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="control">
             <label htmlFor="photo" className="btnPhoto">
               Upload photo
             </label>
@@ -133,18 +142,20 @@ function App() {
             <th>Email</th>
             <th>Father's Name</th>
             <th>Date of birth</th>
+            <th>Subject</th>
             <th>Photo</th>
           </tr>
         </thead>
         {teacherList && (
           <tbody>
-            {teacherList.map((t) => (
-              <tr>
+            {teacherList.map((t, i) => (
+              <tr key={i}>
                 <td>{t.name}</td>
                 <td>{t.address}</td>
                 <td>{t.email}</td>
                 <td>{t.fatherName}</td>
                 <td>{moment(t.dob).format("YYYY-MM-DD")}</td>
+                <td>{t.subject}</td>
                 <td>
                   <img
                     src={`http://localhost:5000/images/${t.photo}`}

@@ -8,7 +8,9 @@
     "tsc": "tsc",
     "build": "npm run tsc",
     "start": "node ./dist/index.js",
-    "dev": "ts-node-dev ./backend/index.ts",
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "ts-node-dev ./backend/index.ts",
+    "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\"",
     "lint": "eslint ./backend/ --ext js,ts"
   },
   "keywords": [],
@@ -22,6 +24,7 @@
     "@types/validator": "^13.7.11",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "concurrently": "^7.6.0",
     "eslint": "^8.32.0",
     "eslint-config-typescript-nodejs": "^3.3.0",
     "ts-node-dev": "^2.0.0",

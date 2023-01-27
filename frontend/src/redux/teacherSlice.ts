@@ -16,7 +16,6 @@ export const addTeacher = createAsyncThunk(
 );
 
 const initialState = {
-  teacher: {} as ITeacher,
   teacherList: [] as ITeacher[],
   isLoading: false,
   errMessage: "",
@@ -35,6 +34,13 @@ const teacherSlice = createSlice({
         (state, action: PayloadAction<ITeacher[]>) => {
           state.isLoading = false;
           state.teacherList = action.payload;
+        }
+      )
+      .addCase(
+        addTeacher.fulfilled,
+        (state, action: PayloadAction<ITeacher>) => {
+          state.isLoading = false;
+          state.teacherList.push(action.payload);
         }
       )
       .addCase(

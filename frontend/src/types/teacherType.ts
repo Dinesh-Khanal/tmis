@@ -1,4 +1,5 @@
 export interface ITeacher {
+  _id?: string;
   name: string;
   address?: string;
   email: string;

@@ -3,8 +3,8 @@ import "./App.css";
 import profilePic from "./assets/Profile.png";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { ITeacher } from "./types/teacherType";
-import { fetchTeachers, addTeacher } from "./redux/teacherSlice";
-import moment from "moment";
+import { fetchTeachers, addTeacher, deleteTeacher } from "./redux/teacherSlice";
+import TeacherTable from "./components/TeacherTable";
 
 const initTeacher: ITeacher = {
   name: "",
@@ -35,7 +35,9 @@ function App() {
     }
     setTeacher({ ...teacher, [e.target.name]: e.target.value });
   };
-
+  const handleDelete = (id: string) => {
+    dispatch(deleteTeacher(id));
+  };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const myForm = new FormData();
@@ -47,6 +49,8 @@ function App() {
     myForm.set("dob", teacher.dob as string);
     myForm.set("photo", teacher.photo as File);
     dispatch(addTeacher(myForm));
+    setImagePreview(profilePic);
+    setTeacher(initTeacher);
   };
   if (isLoading) return <div>Loading...</div>;
   return (
@@ -116,7 +120,7 @@ function App() {
             />
           </div>
           <div className="control">
-            <label htmlFor="photo" className="btnPhoto">
+            <label htmlFor="photo" className="btnLink">
               Upload photo
             </label>
             <input
@@ -133,40 +137,7 @@ function App() {
           <img src={imagePreview} alt="profile picture" />
         </div>
       </div>
-      <h2>Teacher List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Email</th>
-            <th>Father's Name</th>
-            <th>Date of birth</th>
-            <th>Subject</th>
-            <th>Photo</th>
-          </tr>
-        </thead>
-        {teacherList && (
-          <tbody>
-            {teacherList.map((t, i) => (
-              <tr key={i}>
-                <td>{t.name}</td>
-                <td>{t.address}</td>
-                <td>{t.email}</td>
-                <td>{t.fatherName}</td>
-                <td>{moment(t.dob).format("YYYY-MM-DD")}</td>
-                <td>{t.subject}</td>
-                <td>
-                  <img
-                    src={`http://localhost:5000/images/${t.photo}`}
-                    alt={t.photo as string}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        )}
-      </table>
+      <TeacherTable teacherList={teacherList} handleDelete={handleDelete} />
     </div>
   );
 }

@@ -14,6 +14,13 @@ export const addTeacher = createAsyncThunk(
     return result.data;
   }
 );
+export const deleteTeacher = createAsyncThunk(
+  "teacher/delete",
+  async (id: string) => {
+    const result = await API.delete(`/teacher/${id}`);
+    return result.data;
+  }
+);
 
 const initialState = {
   teacherList: [] as ITeacher[],
@@ -50,6 +57,23 @@ const teacherSlice = createSlice({
           state.errMessage = action.error.message || "";
         }
       );
+    builder
+      .addCase(deleteTeacher.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        deleteTeacher.fulfilled,
+        (state, action: PayloadAction<ITeacher>) => {
+          state.teacherList = state.teacherList.filter(
+            (t) => t._id !== action.payload._id
+          );
+          state.isLoading = false;
+        }
+      )
+      .addCase(deleteTeacher.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errMessage = action.error.message || "";
+      });
   },
 });
 export default teacherSlice.reducer;

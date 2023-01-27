@@ -4,6 +4,9 @@
   padding: 2rem;
   text-align: center;
 }
+h1 {
+  font-size: 40px !important;
+}
 .frmUpper {
   display: flex;
 }
@@ -25,7 +28,7 @@
 .control input[type="file"] {
   display: none;
 }
-.btnPhoto {
+.btnLink {
   cursor: pointer;
   color: blue;
 }
@@ -42,10 +45,13 @@ table {
   border-collapse: collapse;
   text-align: left;
 }
-td,
 th {
+  border: 1px solid white;
+  padding: 0 3px;
+}
+td {
   border: 1px solid gray;
-  padding-left: 3px;
+  padding: 0 3px;
 }
 thead tr {
   color: white;

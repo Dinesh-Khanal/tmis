@@ -34,3 +34,11 @@ export const createTeacher = asyncHandler(
     }
   }
 );
+export const deleteTeacher = asyncHandler(
+  async (req: Request, res: Response) => {
+    const teacher = await Teacher.findById(req.params.id);
+    if (!teacher) return;
+    await teacher.remove();
+    res.status(200).json(teacher);
+  }
+);

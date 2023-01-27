@@ -4,6 +4,7 @@ import profilePic from "./assets/Profile.png";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { ITeacher } from "./types/teacherType";
 import { fetchTeachers, addTeacher } from "./redux/teacherSlice";
+import moment from "moment";
 
 const initTeacher: ITeacher = {
   name: "",
@@ -30,6 +31,7 @@ function App() {
       if (!e.target.files) return;
       setImagePreview(URL.createObjectURL(e.target.files[0]));
       setTeacher({ ...teacher, [e.target.name]: e.target.files[0] });
+      return;
     }
     setTeacher({ ...teacher, [e.target.name]: e.target.value });
   };
@@ -46,6 +48,7 @@ function App() {
     myForm.set("photo", teacher.photo as File);
     dispatch(addTeacher(myForm));
   };
+  console.log(teacherList);
   if (isLoading) return <div>Loading...</div>;
   return (
     <div className="App">
@@ -141,9 +144,12 @@ function App() {
                 <td>{t.address}</td>
                 <td>{t.email}</td>
                 <td>{t.fatherName}</td>
-                <td>{t.dob}</td>
+                <td>{moment(t.dob).format("YYYY-MM-DD")}</td>
                 <td>
-                  <img src={t.photo as string} alt={t.photo as string} />
+                  <img
+                    src={`http://localhost:5000/images/${t.photo}`}
+                    alt={t.photo as string}
+                  />
                 </td>
               </tr>
             ))}

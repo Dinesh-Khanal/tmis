@@ -19,6 +19,6 @@ const teacherSchema = new Schema({
   fatherName: String,
   subject: String,
   dob: Date,
-  photoUrl: String,
+  photo: String,
 });
 export default model<ITeacher>("Teacher", teacherSchema);

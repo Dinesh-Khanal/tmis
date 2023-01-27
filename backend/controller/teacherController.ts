@@ -13,15 +13,16 @@ export const getTeachers = asyncHandler(async (req: Request, res: Response) => {
 });
 export const createTeacher = asyncHandler(
   async (req: Request, res: Response) => {
-    const photoUrl = req.file?.filename;
-    const { name, address, fatherName, email, subject } = req.body;
+    const photo = req.file?.filename;
+    const { name, address, fatherName, email, subject, dob } = req.body;
     const teacher = await Teacher.create({
       name,
       address,
       fatherName,
       email,
       subject,
-      photoUrl,
+      dob,
+      photo,
     });
     if (teacher) {
       res.status(200).json(teacher);

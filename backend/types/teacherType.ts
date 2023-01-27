@@ -5,5 +5,5 @@ export interface ITeacher {
   fatherName?: string;
   subject?: string;
   dob?: Date;
-  photoUrl?: string;
+  photo?: string;
 }

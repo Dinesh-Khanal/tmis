@@ -54,3 +54,7 @@ thead tr {
 tbody tr:nth-child(even) {
   background-color: lightgray;
 }
+td img {
+  max-width: 50px;
+  width: 100%;
+}

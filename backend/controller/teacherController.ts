@@ -2,6 +2,8 @@ import { Response, Request } from "express";
 import Teacher from "../model/teacherModel";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError";
+import fs from "fs";
+import path from "path";
 
 export const getTeachers = asyncHandler(async (req: Request, res: Response) => {
   const teachers = await Teacher.find();
@@ -42,7 +44,7 @@ export const updateTeacher = asyncHandler(
       photo,
     });
     if (teacher) {
-      res.status(200).json(teacher);
+      res.status(200).json({ ...req.body, photo });
     } else {
       throw new AppError("Something went wrong, could not update data", 500);
     }
@@ -55,6 +57,13 @@ export const deleteTeacher = asyncHandler(
       throw new AppError("Could not found teacher data", 500);
     }
     await teacher.remove();
-    res.status(200).json(teacher);
+    const filePath = path.join(__dirname, "../../upload/images/");
+    //fs.unlink delete the file, it is node.js funtion
+    fs.unlink(filePath + teacher.photo, (err) => {
+      if (err) {
+        throw new AppError("Could not delete image file " + err, 500);
+      }
+      res.status(200).json(teacher);
+    });
   }
 );

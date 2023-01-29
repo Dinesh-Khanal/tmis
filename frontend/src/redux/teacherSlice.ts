@@ -89,9 +89,13 @@ const teacherSlice = createSlice({
       .addCase(
         updateTeacher.fulfilled,
         (state, action: PayloadAction<ITeacher>) => {
-          state.teacherList = state.teacherList.map((t) =>
-            t._id === action.payload._id ? action.payload : t
+          const index = state.teacherList.findIndex(
+            (t) => t._id === action.payload._id
           );
+          state.teacherList.splice(index, 1, action.payload);
+          // state.teacherList = state.teacherList.map((t) =>
+          //   t._id === action.payload._id ? action.payload : t
+          // );
           state.isLoading = false;
         }
       )

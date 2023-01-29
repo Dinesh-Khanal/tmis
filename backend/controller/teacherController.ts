@@ -34,10 +34,26 @@ export const createTeacher = asyncHandler(
     }
   }
 );
+export const updateTeacher = asyncHandler(
+  async (req: Request, res: Response) => {
+    const photo = req.file?.filename;
+    const teacher = await Teacher.findByIdAndUpdate(req.params.id, {
+      ...req.body,
+      photo,
+    });
+    if (teacher) {
+      res.status(200).json(teacher);
+    } else {
+      throw new AppError("Something went wrong, could not update data", 500);
+    }
+  }
+);
 export const deleteTeacher = asyncHandler(
   async (req: Request, res: Response) => {
     const teacher = await Teacher.findById(req.params.id);
-    if (!teacher) return;
+    if (!teacher) {
+      throw new AppError("Could not found teacher data", 500);
+    }
     await teacher.remove();
     res.status(200).json(teacher);
   }

@@ -3,8 +3,15 @@ import "./App.css";
 import profilePic from "./assets/Profile.png";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { ITeacher } from "./types/teacherType";
-import { fetchTeachers, addTeacher, deleteTeacher } from "./redux/teacherSlice";
+import moment from "moment";
+import {
+  fetchTeachers,
+  addTeacher,
+  deleteTeacher,
+  updateTeacher,
+} from "./redux/teacherSlice";
 import TeacherTable from "./components/TeacherTable";
+import { stringify } from "querystring";
 
 const initTeacher: ITeacher = {
   name: "",
@@ -18,6 +25,7 @@ const initTeacher: ITeacher = {
 function App() {
   const [teacher, setTeacher] = useState(initTeacher);
   const [imagePreview, setImagePreview] = useState<string>(profilePic);
+  const [editClick, setEditClick] = useState(false);
   const { teacherList, isLoading, errMessage } = useAppSelector(
     (state) => state.teacher
   );
@@ -37,6 +45,26 @@ function App() {
   };
   const handleDelete = (id: string) => {
     dispatch(deleteTeacher(id));
+  };
+  const handleEdit = (teacher: ITeacher) => {
+    setTeacher(teacher);
+    setImagePreview(`http://localhost:5000/images/${teacher.photo}`);
+    setEditClick(true);
+  };
+  const handleUpdate = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const myForm = new FormData();
+    const id = teacher._id as string;
+    myForm.set("name", teacher.name);
+    myForm.set("address", teacher.address as string);
+    myForm.set("email", teacher.email);
+    myForm.set("fatherName", teacher.fatherName as string);
+    myForm.set("subject", teacher.subject as string);
+    myForm.set("dob", teacher.dob as string);
+    myForm.set("photo", teacher.photo as File);
+    dispatch(updateTeacher({ id, teacherData: myForm }));
+    setImagePreview(profilePic);
+    setTeacher(initTeacher);
   };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -105,7 +133,11 @@ function App() {
               type="date"
               id="dob"
               name="dob"
-              value={teacher.dob}
+              value={
+                teacher.dob !== ""
+                  ? moment(teacher.dob).format("YYYY-MM-DD")
+                  : ""
+              }
               onChange={handleChange}
             />
           </div>
@@ -131,13 +163,21 @@ function App() {
               onChange={handleChange}
             />
           </div>
-          <input type="submit" value="Submit data" />
+          {editClick ? (
+            <button onClick={handleUpdate}>Update Data</button>
+          ) : (
+            <input type="submit" value="Submit Data" />
+          )}
         </form>
         <div className="imgPreview">
           <img src={imagePreview} alt="profile picture" />
         </div>
       </div>
-      <TeacherTable teacherList={teacherList} handleDelete={handleDelete} />
+      <TeacherTable
+        teacherList={teacherList}
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+      />
     </div>
   );
 }

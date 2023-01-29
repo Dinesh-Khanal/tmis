@@ -5,8 +5,13 @@ import moment from "moment";
 interface TeacherProps {
   teacherList: ITeacher[];
   handleDelete: (id: string) => void;
+  handleEdit: (teacher: ITeacher) => void;
 }
-const TeacherTable = ({ teacherList, handleDelete }: TeacherProps) => {
+const TeacherTable = ({
+  teacherList,
+  handleDelete,
+  handleEdit,
+}: TeacherProps) => {
   return (
     <>
       <h2>Teacher List</h2>
@@ -40,7 +45,9 @@ const TeacherTable = ({ teacherList, handleDelete }: TeacherProps) => {
                     alt={t.photo as string}
                   />
                 </td>
-                <td className="btnLink">Edit</td>
+                <td className="btnLink" onClick={() => handleEdit(t)}>
+                  Edit
+                </td>
                 <td
                   className="btnLink"
                   onClick={() => handleDelete(t._id as string)}

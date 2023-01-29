@@ -14,6 +14,14 @@ export const addTeacher = createAsyncThunk(
     return result.data;
   }
 );
+export const updateTeacher = createAsyncThunk(
+  "teacher/update",
+  async ({ id, teacherData }: { id: string; teacherData: FormData }) => {
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const result = await API.put(`/teacher/${id}`, teacherData, config);
+    return result.data;
+  }
+);
 export const deleteTeacher = createAsyncThunk(
   "teacher/delete",
   async (id: string) => {
@@ -71,6 +79,23 @@ const teacherSlice = createSlice({
         }
       )
       .addCase(deleteTeacher.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errMessage = action.error.message || "";
+      });
+    builder
+      .addCase(updateTeacher.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        updateTeacher.fulfilled,
+        (state, action: PayloadAction<ITeacher>) => {
+          state.teacherList = state.teacherList.map((t) =>
+            t._id === action.payload._id ? action.payload : t
+          );
+          state.isLoading = false;
+        }
+      )
+      .addCase(updateTeacher.rejected, (state, action) => {
         state.isLoading = false;
         state.errMessage = action.error.message || "";
       });
